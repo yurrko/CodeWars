@@ -8,9 +8,9 @@ namespace CodeWars
     {
         static void Main( string[] args )
         {
-            Console.WriteLine(
-                Kata.QueueTime( new[] { 1, 2, 3, 4 }, 1 )
-            );
+            //Console.WriteLine(
+            //    Kata.QueueTime( new[] { 1, 2, 3, 4 }, 1 )
+            //);
 
             Console.WriteLine(
                 Kata.QueueTime( new int[] { 2, 2, 3, 3, 4, 4 }, 2 )
@@ -24,49 +24,13 @@ namespace CodeWars
     {
         public static long QueueTime( int[] customers, int n )
         {
-            var timeLong = 0;
+            var registers = new List<int>( Enumerable.Repeat( 0, n ) );
 
-            var all = customers.ToList();
-            var q = new List<int>();
-            var minNum = int.MaxValue;
-
-            int CalculateMin( List<int> numbers )
+            foreach ( int cust in customers )
             {
-                return numbers.Min();
+                registers[registers.IndexOf( registers.Min() )] += cust;
             }
-
-            List<int> Refresh( List<int> allLongs, int minQ )
-            {
-                for ( int i = 0; i < n; i++ )
-                {
-                    if ( i < allLongs.Count )
-                        allLongs[i] -= minQ;
-                }
-
-                for ( int j = 0; j < n; j++ )
-                {
-                    if ( j < allLongs.Count )
-                        if ( allLongs[j] == 0 ) allLongs.RemoveAt( j );
-                }
-
-                return allLongs;
-            }
-
-            while ( all.Count > 0 )
-            {
-                for ( int i = 0; i < n; i++ )
-                {
-                    if ( i < all.Count )
-                        q.Add( all[i] );
-                }
-
-                minNum = CalculateMin( q );
-                timeLong += minNum;
-                q.Clear();
-                all = Refresh( all, minNum );
-            }
-
-            return timeLong;
+            return registers.Max();
         }
     }
 }
