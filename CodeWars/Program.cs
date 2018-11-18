@@ -31,38 +31,18 @@ namespace CodeWars
 
         public RGB Parse( string color )
         {
-            string colorToParse;
             color = color.ToLower();
-            if ( color[0].Equals( '#' ) )
-            {
-                colorToParse = color.Length == 4 ? $"{color[1]}{color[1]}{color[2]}{color[2]}{color[3]}{color[3]}" : color.Remove( 0, 1 );
-            }
-            else if ( presetColors.ContainsKey( color ) )
-            {
-                presetColors.TryGetValue( color, out colorToParse );
-                colorToParse = colorToParse.Remove(0, 1);
-            }
+            string hex;
+
+            if ( presetColors.ContainsKey( color ) )
+                hex = presetColors[color];
+            else if ( color.Length == 4 )
+                hex = string.Format( "#{0}{0}{1}{1}{2}{2}", color[1], color[2], color[3] );
             else
-                colorToParse = "000000";
+                hex = color;
 
-            byte parseToNum( string col )
-            {
-                return (byte) (parseToDigit(col[0]) * 16 + parseToDigit(col[1]));
-            }
-
-            byte parseToDigit( char ch )
-            {
-                if (ch >= '0' && ch <= '9')
-                    return (byte) (ch - '0');
-                if (ch >= 'a' && ch <= 'f')
-                    return (byte) (ch - 'a' + 10);
-                return 0;
-            }
-
-            return new RGB( parseToNum( colorToParse.Substring( 0, 2 ) ),
-                            parseToNum( colorToParse.Substring( 2, 2 ) ),
-                            parseToNum( colorToParse.Substring( 4, 2 ) )
-            );
+            var n = Convert.ToInt32( hex.Substring( 1 ), 16 );
+            return new RGB( (byte)( ( n >> 16 ) & 0xFF ), (byte)( ( n >> 8 ) & 0xFF ), (byte)( n & 0xFF ) );
         }
     }
 
